@@ -39,17 +39,50 @@ public class Mover : MonoBehaviour
         {
             MyFunction();
         }
+
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            Duplicate();
+        }
     }
+
+    bool touchingGround = false;
 
     void OnCollisionEnter(Collision other)
     {
-        Debug.Log("Hello");
+        if(other.gameObject.CompareTag("Ground"))
+        {
+            touchingGround = true;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Destroy(other.gameObject);
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        if(other.gameObject.CompareTag("Ground"))
+        {
+            touchingGround = false;
+        }
     }
 
     public float jumpForce = 10f;
     void MyFunction()
     {
-        //rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        if(touchingGround)
+        {
+            //rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    public GameObject spherePrefab;
+
+    void Duplicate()
+    {
+        Instantiate(spherePrefab, transform.position + Vector3.up * 2, Quaternion.identity);
     }
 }
